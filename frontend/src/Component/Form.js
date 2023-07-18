@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function PostComposer(props) {
   const [name, setName] = useState("");
   const [student, setStudent] = useState("");
   const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = async () => {
+    let data = await axios.get("http://localhost:8080/users");
+    setUsers(data.data.users);
+  };
 
   const addUser = async () => {
     const response = await axios.post("http://localhost:8080/users", {
