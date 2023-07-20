@@ -1,61 +1,50 @@
 class UserController {
-  constructor() {
-    this.users = [
-      {
-        name: "Connie",
-        student: "coder",
-      },
-      {
-        name: "Pierre",
-        student: "Design Technology",
-      },
-    ];
+  constructor(client) {
+    this.client = client;
   }
 
   list = (req, res) => {
     console.log("UserRouter called userControll List method");
-    res.json({ users: this.users, message: "success" });
+
+    this.client.query("SELECT * FROM students;", (error, result) => {
+      if (error) {
+        console.log(error);
+      }
+
+      res.json({ users: result.rows, message: "success" });
+    });
   };
 
-  listOne = (req, res) => {
-    console.log("UserRouter called userControll ListOne method");
-    let user = this.users.filter((x) => x.name === req.params.name);
-    res.json({ message: "success", user: user });
-  };
+  add = async (req, res) => {
+    const user = req.body;
 
-  add = (req, res) => {
-    console.log("UserRouter called userControll Add method");
-    this.users.push({ name: req.body.name, student: req.body.student });
-    res.json({ users: this.users, message: "success" });
-  };
+    await this.client.query(
+      `INSERT INTO students (first_name, last_name, age, current_course) VALUES ('${user.first_name}', '${user.last_name}', '${user.age}', '${user.current_course}');`
+    );
 
-  listNames = (req, res) => {
-    console.log("UserRouter called userControll ListNames method");
-    let names = this.users.map((user) => user.name);
-    res.json({ users: names, message: "success" });
+    let data = await this.client.query("SELECT * FROM students;");
+    console.log("real data to use:", data);
+    console.log(data.rows);
+
+    res.json({ users: data.rows, message: "success" });
   };
 
   edit = (req, res) => {
-    console.log(req.params.name);
-    let index = this.users.findIndex((x) => x.name === req.params.name);
-    console.log(index);
-    let newName = req.body.name;
-    let newStudent = req.body.student;
-    this.users[index] = { name: newName, student: newStudent };
-    res.json({
-      users: this.users,
-      message: "success",
-    });
+    //
   };
 
-  delete = (req, res) => {
-    console.log(req.params.name);
-    let index = this.users.findIndex((x) => x.name === req.params.name);
-    this.users.splice(index, 1);
-    res.json({
-      users: this.users,
-      message: "success",
-    });
+  delete = async (req, res) => {
+    console.log(req.params.id);
+
+    await this.client.query(
+      `DELETE FROM students WHERE id = '${req.params.id}'`
+    );
+
+    let data = await this.client.query("SELECT * FROM students;");
+    console.log("real data to use:", data);
+    console.log(data.rows);
+
+    res.json({ users: data.rows, message: "success" });
   };
 }
 module.exports = UserController;
