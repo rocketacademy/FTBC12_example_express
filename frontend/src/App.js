@@ -1,6 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Form from "./Component/Form";
+import Grid from "./Component/Grid";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         </a>
 
         <Form />
+        {/* <Grid /> */}
       </header>
     </div>
   );

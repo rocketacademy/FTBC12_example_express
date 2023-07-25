@@ -3,21 +3,24 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 
-const pg = require("pg");
-const { Client } = pg;
-const pgConnectionConfigs = {
-  user: process.env.USERNAME,
-  host: "localhost",
-  database: process.env.DATABASE,
-  port: process.env.DB_PORT,
-};
-const client = new Client(pgConnectionConfigs);
-client.connect();
+// const pg = require("pg");
+// const { Client } = pg;
+// const pgConnectionConfigs = {
+//   user: process.env.USERNAME,
+//   host: "localhost",
+//   database: process.env.DATABASE,
+//   port: process.env.DB_PORT,
+// };
+// const client = new Client(pgConnectionConfigs);
+// client.connect();
+
+const db = require("./db/models/index");
+const { students, student_address } = db;
 
 const UserController = require("./Controllers/UserController");
 const UserRouter = require("./Routers/UserRouter");
 
-const userController = new UserController(client);
+const userController = new UserController(students, student_address);
 const userRouter = new UserRouter(userController, express);
 var corsOptions = {
   origin: "http://localhost:3000",

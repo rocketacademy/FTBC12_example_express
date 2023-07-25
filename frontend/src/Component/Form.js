@@ -7,6 +7,7 @@ export default function PostComposer(props) {
 
   const [age, setAge] = useState(18);
   const [currentCourse, setCurrentCourse] = useState("");
+
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -27,6 +28,12 @@ export default function PostComposer(props) {
       current_course: currentCourse,
     });
     console.log(response);
+
+    // handling one user returned
+    // const newList = [...users, response.data.users];
+    // setUsers(newList);
+
+    // handling getting all users back
     setUsers(response.data.users);
 
     // axios
